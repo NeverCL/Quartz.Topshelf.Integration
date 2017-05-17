@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,18 @@ namespace Quartz.Topshelf.Integration
     /// </summary>
     public class HostHelper
     {
+        private readonly Func<QuartzService> _constructFunc = () => new QuartzService();
+
+        public HostHelper(Func<QuartzService> constructFunc)
+        {
+            this._constructFunc = constructFunc;
+        }
+
+        public HostHelper()
+        {
+
+        }
+
         public void Start(string serviceName, string displayName = null, string description = null)
         {
             if (string.IsNullOrEmpty(serviceName))
@@ -31,7 +44,7 @@ namespace Quartz.Topshelf.Integration
             {
                 x.Service<QuartzService>(s =>
                 {
-                    s.ConstructUsing(name => new QuartzService());
+                    s.ConstructUsing(name => _constructFunc());
                     s.WhenStarted(tc => tc.Start());
                     s.WhenStopped(tc => tc.Stop());
                 });
