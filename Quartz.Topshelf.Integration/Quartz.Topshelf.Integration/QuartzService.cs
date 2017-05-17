@@ -29,7 +29,6 @@ namespace Quartz.Topshelf.Integration
 
         public QuartzService(NameValueCollection config)
         {
-            LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter { Level = LogLevel.Info };
             var factory = new StdSchedulerFactory(config);
             _scheduler = factory.GetScheduler();
         }
